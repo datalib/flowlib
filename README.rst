@@ -1,14 +1,14 @@
 flowlib
 =======
 
-Declarative data processing pipeline framework for Python,
-with support for dependency injection to make it easier to
-create testable, functional and working pipelines::
+Library implementing primitives and utilities for making
+data processing pipelines in a declarative way. The
+simplest way of using the library::
 
-    from flowlib.engine import Engine
+    from flowlib.api import stream
 
-    def add(data):
-        return sum(data)
-
-    engine = Engine(reduce=[add])
-    assert engine.transform([1,2,3]) == 6
+    pipe = stream(fn1)
+        .branch([stream(fn2),
+                 stream(fn3).then(fn4)])\
+        .then(fn5)\
+        .then(fn6)
