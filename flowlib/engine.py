@@ -1,5 +1,6 @@
 from collections import defaultdict
 from flowlib.exceptions import NoSuchEvent
+from flowlib.core import pipeline
 
 
 class Engine(object):
@@ -12,17 +13,24 @@ class Engine(object):
             for stage in self.order
         }
 
-    def transform(self, data):
+    def compile_pipeline(self):
+        procs = []
         for stage in self.order:
-            for func in self.procs[stage]:
-                data = func(data)
-        return data
+            procs.extend(self.procs[stage])
+        return procs
+
+    def transform(self, data):
+        return pipeline(data,
+                        self.compile_pipeline())
 
     def hook(self, event):
-        if event not in self.event_hooks:
-            raise NoSuchEvent(event)
-        cb = self.event_hooks[event]
         def decorator(fn):
-            cb(fn)
+            self.register_hook(event, fn)
             return fn
         return decorator
+
+    def register_hook(self, event, fn):
+        if event not in self.event_hooks:
+            raise NoSuchEvent(event)
+        handler = self.event_hooks[event]
+        handler(fn)
