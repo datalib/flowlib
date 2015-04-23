@@ -8,8 +8,8 @@ class Engine(object):
     def __init__(self, **kwargs):
         self.procs = defaultdict(list, kwargs)
         self.event_hooks = {
-            'post-map': self.procs['map'].append,
-            'post-reduce': self.procs['reduce'].append,
+            'post-%s' % (stage,): self.procs[stage].append
+            for stage in self.order
         }
 
     def transform(self, data):
