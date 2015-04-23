@@ -10,5 +10,5 @@ create testable, functional and working pipelines::
     def add(data):
         return sum(data)
 
-    engine = Engine([add])
+    engine = Engine(reduce=[add])
     assert engine.transform([1,2,3]) == 6
