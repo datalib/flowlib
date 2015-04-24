@@ -4,14 +4,13 @@ from flowlib.core import branch, compose
 class Stream(object):
     def __init__(self, func):
         self.func = func
-        self.cls = self.__class__
-        self.prevs = ()
+        self.prev = ()
 
     def clone(self, func, child=True):
-        u = self.cls(func)
-        u.prevs = self.prevs
+        u = self.__class__(func)
+        u.prev = self.prev
         if child:
-            u.prevs += (self,)
+            u.prev += (self,)
         return u
 
     def branch(self, fns):
@@ -22,7 +21,7 @@ class Stream(object):
         return self.clone(fn)
 
     def __call__(self, data):
-        fn = compose([p.func for p in self.prevs] + [self.func])
+        fn = compose([p.func for p in self.prev] + [self.func])
         return fn(data)
 
     @classmethod

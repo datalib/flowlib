@@ -18,8 +18,7 @@ def branch(src, to):
 
         emit, streams = streams[0], streams[1:]
         for consumer, stream in zip(to, streams):
-            for item in consumer(stream):
-                pass
+            consumer(stream)
         return emit
     return func
 
