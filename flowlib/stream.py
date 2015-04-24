@@ -24,3 +24,11 @@ class Stream(object):
     def __call__(self, data):
         fn = compose([p.func for p in self.prevs] + [self.func])
         return fn(data)
+
+    @classmethod
+    def from_iterable(cls, funcs):
+        funcs = iter(funcs)
+        stream = cls(next(funcs))
+        for proc in funcs:
+            stream = stream.then(proc)
+        return stream

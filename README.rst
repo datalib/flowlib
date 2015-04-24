@@ -12,3 +12,8 @@ simplest way of using the library::
                  stream(fn3).then(fn4)])\
         .then(fn5)\
         .then(fn6)
+
+    assert pipe([1,2]) == fn6(fn5(fn1([1,2])))
+
+The basic idea is to have an object-oriented, easy to use
+veneer over the "true" functional workhorses.
