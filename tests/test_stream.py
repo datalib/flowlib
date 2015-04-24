@@ -35,7 +35,12 @@ def branch(stream):
     return stream, ctx
 
 
-def test_branching(branch):
-    stream, ctx = branch
+def test_branching_returns_main_stream(branch):
+    stream, _ = branch
     assert list(stream([1,2,3])) == [2,3,4]
+
+
+def test_branching_calls_other_streams(branch):
+    stream, ctx = branch
+    stream([1,2,3])
     assert ctx == [2,3,4,2,3,4,None]
