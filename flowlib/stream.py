@@ -6,16 +6,16 @@ class Stream(object):
         self.func = func
         self.prev = ()
 
-    def clone(self, func, child=True):
+    def clone(self, func, inherit=True):
         u = self.__class__(func)
         u.prev = self.prev
-        if child:
+        if inherit:
             u.prev += (self,)
         return u
 
     def branch(self, fns):
         return self.clone(branch(self.func, to=fns),
-                          child=False)
+                          inherit=False)
 
     def then(self, fn):
         return self.clone(fn)

@@ -25,6 +25,19 @@ def test_stream_immutable(stream):
     assert stream in g.prev
 
 
+def test_stream_clone_inherit(stream):
+    u = stream.clone(lambda x: [(k+2) for k in x])
+    assert stream in u.prev
+    assert stream([1,2,3]) == [2,3,4]
+    assert u([1,2,3]) == [4,5,6]
+
+
+def test_stream_clone_no_inherit(stream):
+    u = stream.clone(lambda x: [(k+2) for k in x], inherit=False)
+    assert stream not in u.prev
+    assert u([1,2,3]) == [3,4,5]
+
+
 @pytest.fixture
 def branch(stream):
     ctx = []
