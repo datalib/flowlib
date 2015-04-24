@@ -1,6 +1,5 @@
 from functools import partial, wraps
-from inspect import isgenerator
-from .helpers import branch_generator, branch_reentrant
+from itertools import tee
 
 
 def pipeline(data, funcs):
@@ -10,12 +9,17 @@ def pipeline(data, funcs):
 
 
 def branch(src, to):
+    num_of_streams = len(to) + 1
+
     @wraps(src)
     def func(*args, **kwargs):
         it = src(*args, **kwargs)
-        if isgenerator(it):
-            return branch_generator(it, to)
-        return branch_reentrant(it, to)
+        streams = tee(it, num_of_streams)
+
+        emit, streams = streams[0], streams[1:]
+        for stream, consumer in zip(streams, to):
+            consumer(stream)
+        return emit
     return func
 
 
