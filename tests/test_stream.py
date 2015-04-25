@@ -1,6 +1,5 @@
 import pytest
 from flowlib.stream import Stream
-from flowlib.core import each
 
 
 @pytest.fixture

@@ -1,5 +1,5 @@
 from functools import partial
-from flowlib.core import branch, compose
+from flowlib.core import branch, pipeline
 
 
 class Stream(object):
@@ -21,8 +21,8 @@ class Stream(object):
         return self.clone(fn)
 
     def __call__(self, data):
-        fn = compose([p.func for p in self.prev] + [self.func])
-        return fn(data)
+        fns = [p.func for p in self.prev] + [self.func]
+        return pipeline(data, fns)
 
     @classmethod
     def from_iterable(cls, funcs):
