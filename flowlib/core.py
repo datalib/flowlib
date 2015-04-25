@@ -9,18 +9,12 @@ def pipeline(data, funcs):
 
 
 def branch(src, to):
-    num_of_streams = len(to) + 1
+    streams = tee(src, len(to) + 1)
+    emit, streams = streams[0], streams[1:]
 
-    @wraps(src)
-    def func(*args, **kwargs):
-        it = src(*args, **kwargs)
-        streams = tee(it, num_of_streams)
-
-        emit, streams = streams[0], streams[1:]
-        for stream, consumer in zip(streams, to):
-            consumer(stream)
-        return emit
-    return func
+    for stream, consumer in zip(streams, to):
+        consumer(stream)
+    return emit
 
 
 def compose(funcs):

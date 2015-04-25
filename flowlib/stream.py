@@ -1,3 +1,4 @@
+from functools import partial
 from flowlib.core import branch, compose
 
 
@@ -14,8 +15,7 @@ class Stream(object):
         return u
 
     def branch(self, fns):
-        return self.clone(branch(self.func, to=fns),
-                          inherit=False)
+        return self.then(partial(branch, to=fns))
 
     def then(self, fn):
         return self.clone(fn)
